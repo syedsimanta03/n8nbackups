@@ -1,3 +1,19 @@
+
+What’s in Your .n8n Folder? (From the ZIP)
+This folder is your entire brain of n8n — the SQLite DB, credentials, settings, etc.
+
+Here’s what matters:
+
+File/Folder	Purpose
+database.sqlite	🧠 This is the main database storing all workflows, credentials, etc.
+config/	Global instance config
+binaryData/	Stores files you uploaded or passed through workflows
+git/, ssh/	Auth keys if you use Git/SSH nodes
+nodes/	Custom community or local nodes
+*.log	Logs, safe to ignore in backups (optional)
+
+
+=========================================
 create n8n auto and manual backups to github repo:https://github.com/syedsimanta03/n8nbackups  for workflows and credentials. i'm using azure ubuntu docker n8n.
 
 My linux cli and result below:
