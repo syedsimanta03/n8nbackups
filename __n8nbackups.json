@@ -1,0 +1,199 @@
+{
+  "name": "🤖n8nbackups",
+  "nodes": [
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "hour": 0
+            },
+            {
+              "hour": 1
+            },
+            {
+              "hour": 2
+            },
+            {
+              "hour": 3
+            },
+            {
+              "hour": 4
+            },
+            {
+              "hour": 5
+            },
+            {
+              "hour": 6
+            },
+            {
+              "hour": 7
+            },
+            {
+              "hour": 8
+            },
+            {
+              "hour": 9
+            },
+            {
+              "hour": 10
+            },
+            {
+              "hour": 11
+            },
+            {
+              "hour": 12
+            },
+            {
+              "hour": 13
+            },
+            {},
+            {
+              "hour": 15
+            },
+            {
+              "hour": 16
+            },
+            {
+              "hour": 17
+            },
+            {
+              "hour": 18
+            },
+            {
+              "hour": 19
+            },
+            {
+              "hour": 20
+            },
+            {
+              "hour": 21
+            },
+            {
+              "hour": 22
+            },
+            {
+              "hour": 23
+            }
+          ]
+        }
+      },
+      "name": "Cron Trigger",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        0,
+        460
+      ],
+      "id": "50514c6e-5788-4508-a671-bb95af556e2d"
+    },
+    {
+      "parameters": {},
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        260
+      ],
+      "id": "beafe9af-675c-44de-8336-db3642a9f5b0"
+    },
+    {
+      "parameters": {
+        "functionCode": "const now = new Date();\nconst timestamp = now.toISOString().replace(/[:.]/g, '-');\nconst filename = `n8n_backup_${timestamp}.zip`;\n\nreturn [{ json: { timestamp, filename } }];\n"
+      },
+      "name": "Generate Timestamp",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        220,
+        360
+      ],
+      "id": "1ba194c3-d637-4685-927d-2a88d0b70944"
+    },
+    {
+      "parameters": {
+        "command": "zip -r /home/node/backups/n8n-latest-backup.zip /home/node/.n8n -x '*.log' -x '*.journal'"
+      },
+      "name": "Backup Command",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        440,
+        360
+      ],
+      "id": "626f9e37-51ed-4beb-a982-53d9c116fedc"
+    },
+    {
+      "parameters": {
+        "command": "cd /home/node/backups && git add . && git commit -m \"Updated latest backup}}\" && git push origin main"
+      },
+      "name": "Git Commit & Push",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        660,
+        360
+      ],
+      "id": "4e787d9f-8679-4515-afa5-2cdb21466d52"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Generate Timestamp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cron Trigger": {
+      "main": [
+        [
+          {
+            "node": "Generate Timestamp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Timestamp": {
+      "main": [
+        [
+          {
+            "node": "Backup Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Backup Command": {
+      "main": [
+        [
+          {
+            "node": "Git Commit & Push",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "244cfeb3-0306-4745-962b-04302db4559d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8cde9215e70e93f4a368047f065d8d873fd623672976daa1ba8b097598c2f2dd"
+  },
+  "id": "60xP3c4w31pg8hpP",
+  "tags": []
+}
